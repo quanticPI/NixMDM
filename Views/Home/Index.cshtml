@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+@model List<NixMdm.Models.Device>
+
+
+<div>
+    <h2 class="h2">Dispositivos</h2>
+    <div class="tableContainer">
+        <br>
+        <table class="table table-bordered table-hover table-sm">
+            <thead>
+                <tr>
+                    <th colspan="1">ID</th>
+                    <th>Dispositivo</th>
+                    <th>Número de teléfono</th>
+                    <th>Versión OS </th>
+                    <th colspan="1">IMEI</th>
+                    <th colspan="1">Usuario</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var Device in @Model)
+                {
+                    <tr>
+                    <td> @Device.Id </td>
+                    <td> @Device.Name </td>
+                    <td> @Device.PhoneNumber </td>
+                    <td> @Device.OsVersion </td>
+                    <td> @Device.IMEI </td>
+                    <td> @Device.UserID </td>
+                    </tr>
+                    <tr>
+                        <td> </td>
+                        <td>
+                            <a href="">delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>        
+    </div>
+    <!-- end of table container -->
+</div>
