@@ -18,7 +18,7 @@ namespace NixMdm.Controllers
                 Name = "Samsung A50",
                 IMEI = "EAORFIJHAUEOH",
                 PhoneNumber = "666834485",
-                OsVersion = "Android 9.0",
+                OSVersion = "Android 9.0",
                 UserID = 1
             };
             Device device2 = new Device
@@ -27,7 +27,7 @@ namespace NixMdm.Controllers
                 Name = "Samsung A80",
                 IMEI = "EAORFIJHAUEOH",
                 PhoneNumber = "666834485",
-                OsVersion = "Android 9.1",
+                OSVersion = "Android 9.1",
                 UserID = 2
             };
             List<Device> listDevice = new List<Device>{device1, device2};

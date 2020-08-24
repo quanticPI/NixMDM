@@ -11,5 +11,6 @@ namespace NixMdm.Data
         }
 
         public DbSet<Device> Device { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

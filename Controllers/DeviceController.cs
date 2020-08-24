@@ -98,7 +98,7 @@ namespace NixMdm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IMEI,Name,userID,PhoneNumber,OsVersion,DateAdded")] Device device)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IMEI,Name,UserID,PhoneNumber,OsVersion,DateAdded")] Device device)
         {
             if (id != device.Id)
             {
