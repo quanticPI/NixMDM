@@ -19,12 +19,6 @@ namespace NixMdm.Controllers
             _context = context;
         }
 
-        // GET: Device
-        /*public async Task<IActionResult> Index()
-        {
-            return View(await _context.Device.ToListAsync());
-        }*/
-
         // GET: Search
         public async Task<IActionResult> Index(String searchString)
         {
@@ -66,7 +60,7 @@ namespace NixMdm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IMEI,Name,userID,PhoneNumber,OsVersion,DateAdded")] Device device)
+        public async Task<IActionResult> Create([Bind("Id,IMEI,Name,UserID,PhoneNumber,OsVersion,DateAdded")] Device device)
         {
             if (ModelState.IsValid)
             {
