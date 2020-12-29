@@ -2,26 +2,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
-using NixMdm.Data;
+using NixMdm.Models;
 
-namespace NixMdm.Models
+namespace NixMdm.Data
 {
     public static class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static void Initialize(MDMContext context)
         {
-            using (var context = new MDMContext(
-                serviceProvider.GetRequiredService<
-                    DbContextOptions<MDMContext>>()))
-            {
+            
                 // Look for any movies.
                 if (context.Device.Any())
                 {
                     return;   // DB has been seeded
                 }
 
-                context.Users.AddRange(
-                    new User {ID = 1, Name = "Dan Don"}
+                context.DeviceUsers.AddRange(
+                    new User {Id = 1, Name = "Dan Don"}
                 );
                 context.SaveChanges();
                 context.Device.AddRange(
@@ -73,6 +70,6 @@ namespace NixMdm.Models
                  
                 context.SaveChanges();
             }
-        }
+        
     }
 }

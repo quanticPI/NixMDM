@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using NixMdm.Models;
+using NixMdm.Data;
 using System;
 
 namespace NixMdm
@@ -13,20 +13,27 @@ namespace NixMdm
         {
             var host = CreateHostBuilder(args).Build();
 
-            /*using (var scope = host.Services.CreateScope())
+            InitializeDdIfNotExist(host);
+                        
+            host.Run();
+        }
+
+        private static void InitializeDdIfNotExist(IHost host)
+        {
+            using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 try 
                 {
-                    SeedData.Initialize(services);
+                    var context = services.GetRequiredService<MDMContext>();
+                    SeedData.Initialize(context);
                 }
                 catch(Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
                     logger.LogError(ex, "An error occurred seeding the DB");
                 }
-            }*/
-            host.Run();
+            }
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) => 
