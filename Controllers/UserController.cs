@@ -22,7 +22,7 @@ namespace NixMdm.Controllers
         // GET: User
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            return View(await _context.DeviceUsers.ToListAsync());
         }
 
         // GET: User/Details/5
@@ -33,8 +33,8 @@ namespace NixMdm.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var user = await _context.DeviceUsers
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -73,7 +73,7 @@ namespace NixMdm.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.FindAsync(id);
+            var user = await _context.DeviceUsers.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
@@ -88,7 +88,7 @@ namespace NixMdm.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("ID,Name")] User user)
         {
-            if (id != user.ID)
+            if (!id.Equals(id))
             {
                 return NotFound();
             }
@@ -102,7 +102,7 @@ namespace NixMdm.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.ID))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -124,8 +124,8 @@ namespace NixMdm.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var user = await _context.DeviceUsers
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -139,15 +139,15 @@ namespace NixMdm.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            _context.Users.Remove(user);
+            var user = await _context.DeviceUsers.FindAsync(id);
+            _context.DeviceUsers.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.ID == id);
+            return _context.DeviceUsers.Any(e => e.Id.Equals(id));
         }
     }
 }
