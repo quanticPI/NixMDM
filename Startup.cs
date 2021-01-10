@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NixMdm.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity;
+using NixMdm.Data;
     
 namespace NixMdm
 {
@@ -16,7 +17,7 @@ namespace NixMdm
         public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
-            Environment = env;
+            Environment = env; 
         }
 
         public IConfiguration Configuration { get; }
@@ -29,7 +30,7 @@ namespace NixMdm
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => false;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.MinimumSameSitePolicy = SameSiteMode.None;                
             });
 
 
@@ -39,8 +40,28 @@ namespace NixMdm
             {
                 if(Environment.IsDevelopment())
                     options.UseSqlite(Configuration.GetConnectionString("MDMContext"));
-                //else
-                //    options.UseSqlServer(Configuration.GetConnectionString("MDMContext"));
+                else
+                    options.UseSqlServer(Configuration.GetConnectionString("MDMContext"));
+            });
+
+            services.AddDefaultIdentity<IdentityUser>()
+            .AddEntityFrameworkStores<MDMContext>()
+            .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+                
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                // Cookie settings
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+
+                options.LoginPath = "/Identity/Pages/Account/Login";
+                options.AccessDeniedPath = "/Identity/Pages/Account/AccessDenied";
+                options.SlidingExpiration = true;
             });
         }
 
@@ -62,12 +83,14 @@ namespace NixMdm
             app.UseStaticFiles();
 
             app.UseRouting();
-
+           
+            app.UseAuthentication();
             app.UseAuthorization();
-
+                        
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute("Home", "{controller=Device}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute("default", "{controller=Device}/{action=Index}/{id?}");
             });
         }
     }
