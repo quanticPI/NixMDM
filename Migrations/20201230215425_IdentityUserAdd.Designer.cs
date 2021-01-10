@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NixMdm.Data;
 
 namespace NixMdm.Migrations
 {
     [DbContext(typeof(MDMContext))]
-    partial class MDMContextModelSnapshot : ModelSnapshot
+    [Migration("20201230215425_IdentityUserAdd")]
+    partial class IdentityUserAdd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
