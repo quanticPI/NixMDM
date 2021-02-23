@@ -2,7 +2,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,8 @@ namespace NixMdm
 
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Environment { get; }
+        static readonly string _RequireAuthenticatedUserPolicy = 
+                            "RequireAuthenticatedUserPolicy";
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -30,11 +33,8 @@ namespace NixMdm
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => false;
-                options.MinimumSameSitePolicy = SameSiteMode.None;                
+                options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
-
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddDbContext<MDMContext>(options => 
             {
@@ -50,7 +50,7 @@ namespace NixMdm
 
             services.AddAuthorization(options =>
             {
-                
+                options.AddPolicy(_RequireAuthenticatedUserPolicy, builder => builder.RequireAuthenticatedUser());
             });
 
             services.ConfigureApplicationCookie(options =>
@@ -63,6 +63,9 @@ namespace NixMdm
                 options.AccessDeniedPath = "/Identity/Pages/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
+
+            // Register the Swagger Generator
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,15 +86,22 @@ namespace NixMdm
             app.UseStaticFiles();
 
             app.UseRouting();
-           
+
             app.UseAuthentication();
             app.UseAuthorization();
-                        
+
+            app.UseSwagger();
+            app.UseSwaggerUI(ops =>
+            {
+                ops.SwaggerEndpoint("/swagger/v1/swagger.json", "NixMDMAPI V1");
+            });
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
-                endpoints.MapControllerRoute("default", "{controller=Device}/{action=Index}/{id?}");
-            });
+                 endpoints.MapControllerRoute("default", "{controller=Device}/{action=Index}/{id?}");
+                 endpoints.MapRazorPages();
+                //endpoints.MapDefaultControllerRoute();
+            });            
         }
     }
 }
