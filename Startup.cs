@@ -4,12 +4,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Identity;
+
 using NixMdm.Data;
+using Google.Apis.Auth.AspNetCore3;
     
 namespace NixMdm
 {
@@ -66,6 +69,28 @@ namespace NixMdm
 
             // Register the Swagger Generator
             services.AddSwaggerGen();
+
+            // This configures Google.Apis.Auth.AspNetCore3 for use in this app.
+            services
+                .AddAuthentication(o =>
+                {
+                    // This forces challenge results to be handled by Google OpenID Handler, so there's no
+                    // need to add an AccountController that emits challenges for Login.
+                    o.DefaultChallengeScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+                    // This forces forbid results to be handled by Google OpenID Handler, which checks if
+                    // extra scopes are required and does automatic incremental auth.
+                    o.DefaultForbidScheme = GoogleOpenIdConnectDefaults.AuthenticationScheme;
+                    // Default scheme that will handle everything else.
+                    // Once a user is authenticated, the OAuth2 token info is stored in cookies.
+                    o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                })
+                .AddCookie()
+                .AddGoogleOpenIdConnect(options =>
+                {
+                    ClientInfo client = ClientInfo.Load();
+                    options.ClientId = client.ClientId;
+                    options.ClientSecret = client.ClientSecret;                                  
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
