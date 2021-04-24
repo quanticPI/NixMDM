@@ -9,6 +9,11 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<p>
+    <form asp-action="GetSignupUrl" asp-controller="Device" method="get">
+        <input type="submit" class="btn btn-primary" value="Get SignupUrl">
+    </form>
+</p>
 
 <form asp-controller="Device" asp-action="Index">
     <p>

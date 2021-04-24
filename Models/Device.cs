@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NixMdm.Models
 {
-    public class Device{
+    public class Device {
         
         [Key]
         public int Id { get; set; }
@@ -16,5 +16,9 @@ namespace NixMdm.Models
 
         [DataType(DataType.Date)]
         public DateTime DateAdded {get; set;}
-    }
+
+        public void LockScreen() {
+            throw new NotImplementedException();
+        }
+    }    
 }
