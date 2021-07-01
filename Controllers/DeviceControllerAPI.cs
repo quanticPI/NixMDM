@@ -31,11 +31,12 @@ namespace NixMdm.Controllers
 
         [HttpGet]
         [GoogleScopedAuthorize(AndroidManagementService.ScopeConstants.Androidmanagement)]
-        public async Task<ActionResult> GetSignupUrl([FromServices] IGoogleAuthProvider auth)
+        public async Task<string> GetSignupUrl([FromServices] IGoogleAuthProvider auth)
         {
             EnterpriseClient enterpriseClient = new EnterpriseClient();
             string signupUrl = await enterpriseClient.GetSignupUrl(auth);
-            return View(signupUrl);
+            Response.Redirect(signupUrl);
+            return signupUrl;
         }
     }
 }
