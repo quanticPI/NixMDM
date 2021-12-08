@@ -52,7 +52,9 @@ namespace NixMdm.Controllers
         // GET: Device/Create
         public IActionResult Create()
         {
-            return View();
+            var model = new CreateDeviceViewModel();
+            model.OSVersion = "android";
+            return View(model);
         }
 
         // POST: Device/Create
@@ -60,15 +62,24 @@ namespace NixMdm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IMEI,Name,UserID,PhoneNumber,OsVersion,DateAdded")] Device device)
+        public async Task<IActionResult> Create([Bind("Id,IMEI,Name,UserID,PhoneNumber,OSVersion,DateAdded")] CreateDeviceViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                var device = new Device()
+                {
+                    IMEI = viewModel.IMEI,
+                    Name = viewModel.Name,
+                    UserID = viewModel.UserID,
+                    PhoneNumber = viewModel.PhoneNumber,
+                    OSVersion = viewModel.OSVersion,
+                    DateAdded = viewModel.DateAdded
+                };
                 _context.Add(device);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(device);
+            return View(viewModel);
         }
 
         // GET: Device/Edit/5
