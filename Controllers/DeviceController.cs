@@ -52,7 +52,7 @@ namespace NixMdm.Controllers
         // GET: Device/Create
         public IActionResult Create()
         {
-            var model = new CreateDeviceViewModel();
+            var model = new DeviceViewModel();
             model.OSVersion = "android";
             return View(model);
         }
@@ -62,7 +62,7 @@ namespace NixMdm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IMEI,Name,UserID,PhoneNumber,OSVersion,DateAdded")] CreateDeviceViewModel viewModel)
+        public async Task<IActionResult> Create([Bind("Id,IMEI,Name,UserID,PhoneNumber,OSVersion,DateAdded")] DeviceViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -89,13 +89,22 @@ namespace NixMdm.Controllers
             {
                 return NotFound();
             }
-
             var device = await _context.Device.FindAsync(id);
             if (device == null)
             {
                 return NotFound();
             }
-            return View(device);
+            var model = new DeviceViewModel()
+            {
+                Id = device.Id,
+                IMEI = device.IMEI,
+                Name = device.Name,
+                UserID = device.UserID,
+                PhoneNumber = device.PhoneNumber,
+                OSVersion = device.OSVersion,
+                DateAdded = device.DateAdded
+            };
+            return View(model);
         }
 
         // POST: Device/Edit/5
@@ -103,9 +112,9 @@ namespace NixMdm.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IMEI,Name,UserID,PhoneNumber,OsVersion,DateAdded")] Device device)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,IMEI,Name,UserID,PhoneNumber,OSVersion,DateAdded")] DeviceViewModel model)
         {
-            if (id != device.Id)
+            if (id != model.Id)
             {
                 return NotFound();
             }
@@ -114,12 +123,22 @@ namespace NixMdm.Controllers
             {
                 try
                 {
+                    var device = new Device()
+                    {
+                        Id = model.Id,
+                        IMEI = model.IMEI,
+                        Name = model.Name,
+                        UserID = model.UserID,
+                        PhoneNumber = model.PhoneNumber,
+                        OSVersion = model.OSVersion,
+                        DateAdded = model.DateAdded
+                    };
                     _context.Update(device);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!DeviceExists(device.Id))
+                    if (!DeviceExists(model.Id))
                     {
                         return NotFound();
                     }
@@ -130,7 +149,7 @@ namespace NixMdm.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(device);
+            return View(model);
         }
 
         // GET: Device/Delete/5
