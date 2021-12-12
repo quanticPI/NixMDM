@@ -6,7 +6,7 @@ namespace NixMdm
 {
     public class ClientInfo 
     {
-        private const string ClientSecretFilename = "/home/ignoramus/Documents/client_secret_698465692157-jrj9s17ofndmbe4ag9ndpv5tgu8k2g38.apps.googleusercontent.com.json";
+        private const string ClientSecretFilename = "/home/nikolay/Documents/client_secret_698465692157-jrj9s17ofndmbe4ag9ndpv5tgu8k2g38.apps.googleusercontent.com.json";
         public static ClientInfo Load()
         {
             var secrets = JObject.Parse(File.ReadAllText(ClientSecretFilename))["web"];
