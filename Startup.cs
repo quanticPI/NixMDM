@@ -87,7 +87,8 @@ namespace NixMdm
                 .AddCookie()
                 .AddGoogleOpenIdConnect(options =>
                 {
-                    ClientInfo client = ClientInfo.Load();
+                    var googleClientSecretsInfo = Configuration.GetValue<string>("SecretsFile");
+                    ClientInfo client = ClientInfo.Load(googleClientSecretsInfo);
                     options.ClientId = client.ClientId;
                     options.ClientSecret = client.ClientSecret;                                  
                 });

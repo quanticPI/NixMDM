@@ -1,14 +1,15 @@
 using System;
 using System.IO;
 using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace NixMdm
 {
     public class ClientInfo 
     {
-        private const string ClientSecretFilename = "/home/nikolay/Documents/client_secret_698465692157-jrj9s17ofndmbe4ag9ndpv5tgu8k2g38.apps.googleusercontent.com.json";
-        public static ClientInfo Load()
+        public static ClientInfo Load(string secretsFile)
         {
+            string ClientSecretFilename = secretsFile;
             var secrets = JObject.Parse(File.ReadAllText(ClientSecretFilename))["web"];
             if(secrets == null)
             {
