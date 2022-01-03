@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NixMdm.Data;
 using NixMdm.Models;
-using Microsoft.AspNetCore.Authorization;
 
 namespace NixMdm.Controllers
 {
@@ -22,7 +22,7 @@ namespace NixMdm.Controllers
         // GET: Search
         public async Task<IActionResult> Index(String searchString)
         {
-            var devices = from d in _context.Device select d;
+            var devices = _context.Device.Include(d => d.User).AsNoTracking();
 
             if(!String.IsNullOrEmpty(searchString))
             {
@@ -39,7 +39,7 @@ namespace NixMdm.Controllers
                 return NotFound();
             }
 
-            var device = await _context.Device
+            var device = await _context.Device.Include(d => d.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (device == null)
             {
@@ -70,7 +70,7 @@ namespace NixMdm.Controllers
                 {
                     IMEI = viewModel.IMEI,
                     Name = viewModel.Name,
-                    UserID = viewModel.UserID,
+                    User = viewModel.User,
                     PhoneNumber = viewModel.PhoneNumber,
                     OSVersion = viewModel.OSVersion,
                     DateAdded = viewModel.DateAdded
@@ -99,7 +99,7 @@ namespace NixMdm.Controllers
                 Id = device.Id,
                 IMEI = device.IMEI,
                 Name = device.Name,
-                UserID = device.UserID,
+                User = device.User,
                 PhoneNumber = device.PhoneNumber,
                 OSVersion = device.OSVersion,
                 DateAdded = device.DateAdded
@@ -128,7 +128,7 @@ namespace NixMdm.Controllers
                         Id = model.Id,
                         IMEI = model.IMEI,
                         Name = model.Name,
-                        UserID = model.UserID,
+                        User = model.User,
                         PhoneNumber = model.PhoneNumber,
                         OSVersion = model.OSVersion,
                         DateAdded = model.DateAdded
@@ -198,7 +198,7 @@ namespace NixMdm.Controllers
                 Id = d.Id,
                 IMEI = d.IMEI,
                 Name = d.Name,
-                UserID = d.UserID,
+                User = d.User,
                 PhoneNumber = d.PhoneNumber
             };
     }

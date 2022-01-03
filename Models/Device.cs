@@ -10,8 +10,10 @@ namespace NixMdm.Models
         [Key]
         public int Id { get; set; }
         public string IMEI{ get; set; }
-        public string Name { get; set; }        
-        public int UserID { get; set; }
+        public string Name { get; set; }
+        public int UserId { get; set; }
+        [Display(Name = "Owner")]
+        public DeviceUser User { get; set; }
         public string PhoneNumber { get; set; }
         [Display(Name = "Operating System")]
         public string OSVersion { get; set; }

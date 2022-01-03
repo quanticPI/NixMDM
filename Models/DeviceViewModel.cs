@@ -10,7 +10,7 @@ namespace NixMdm.Models
         public int Id { get; set; }
         public string IMEI { get; set; }
         public string Name { get; set; }
-        public int UserID { get; set; }
+        public DeviceUser User { get; set; }
         [Display (Name = "Operating System")]
         public string OSVersion { get; set; }
         public string PhoneNumber { get; set; }
